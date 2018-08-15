@@ -2,7 +2,6 @@ package com.example.openwhiskclient;
 
 import android.content.Context;
 import android.util.Base64;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -11,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -29,9 +27,9 @@ public class OpenWhiskClient {
         this.credentials = credentials;
     }
 
-    public void invoke(OpenWhiskAction action, JSONObject params, Response.Listener<JSONObject> listener, Response.ErrorListener error, Context context) {
+    public void invoke(String action, JSONObject params, Response.Listener<JSONObject> listener, Response.ErrorListener error, Context context) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = String.format("https://%s/api/v1/namespaces/%s/actions/%s?blocking=true&result=true", host, namespace, action.getName());
+        String url = String.format("https://%s/api/v1/namespaces/%s/actions/%s?blocking=true&result=true", host, namespace, action);
 
         // Request a string response from the provided URL.
         JsonObjectRequest whiskCall = new JsonObjectRequest(Request.Method.POST, url, params, listener, error) {
@@ -45,7 +43,7 @@ public class OpenWhiskClient {
                 headers.put("Authorization", auth);
                 return headers;
             }
-        };;
+        };
 
         // Add the request to the RequestQueue.
         queue.add(whiskCall);
